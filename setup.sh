@@ -84,7 +84,7 @@ for i in `seq 1 2`; do
     # Generating the Guacamole setup script locally on the VMs
     az vm run-command invoke -g $rg -n Guacamole-VM$i  \
         --command-id RunShellScript \
-        --scripts "wget https://raw.githubusercontent.com/ricmmartins/apache-guacamole-azure/main/guac-install.sh -O /tmp/guac-install.sh"
+        --scripts "wget https://raw.githubusercontent.com/ahmedmuhsin/apache-guacamole-azure/main/guac-install.sh -O /tmp/guac-install.sh"
     
     # Adjusting database credentials to match the variables
     az vm run-command invoke -g $rg -n Guacamole-VM$i  \
