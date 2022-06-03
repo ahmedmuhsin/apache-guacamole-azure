@@ -80,28 +80,38 @@ for i in `seq 1 2`; do
         --vnet-name $vnet \
         --subnet $snet \
         --nsg $nsg 
+    done
 
+for i in `seq 1 2`; do
     # Generating the Guacamole setup script locally on the VMs
     az vm run-command invoke -g $rg -n Guacamole-VM$i  \
         --command-id RunShellScript \
         --scripts "wget https://raw.githubusercontent.com/ahmedmuhsin/apache-guacamole-azure/main/guac-install.sh -O /tmp/guac-install.sh"
+    done
     
+for i in `seq 1 2`; do
     # Adjusting database credentials to match the variables
     az vm run-command invoke -g $rg -n Guacamole-VM$i  \
         --command-id RunShellScript \
         --scripts "sudo sed -i.bkp -e 's/mysqlpassword/$mysqlpassword/g' \
         -e 's/mysqldb/$mysqldb/g' \
         -e 's/mysqladmin/$mysqladmin/g' /tmp/guac-install.sh"
+    done
 
+for i in `seq 1 2`; do
     # Executing the Guacamole setup script
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript \
         --scripts "/bin/bash /tmp/guac-install.sh"
+    done
 
+for i in `seq 1 2`; do
     # Installing Nginx to be used as Proxy for Tomcat
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript --scripts "sudo apt install --yes nginx-core"
+    done
 
+for i in `seq 1 2`; do
     # Configuring NGINX
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript \
@@ -124,17 +134,23 @@ for i in `seq 1 2`; do
         }
 }
 EOT"
+    done
 
+for i in `seq 1 2`; do
     # Restart NGINX
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript \
         --scripts "sudo systemctl restart nginx"
+    done
 
+for i in `seq 1 2`; do
     # Restart Tomcat
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript \
         --scripts "sudo systemctl restart tomcat8"
+    done
 
+for i in `seq 1 2`; do
     # Change to call guacamole directly at "/" instead of "/guacamole"
     az vm run-command invoke -g $rg -n Guacamole-VM$i \
         --command-id RunShellScript \
