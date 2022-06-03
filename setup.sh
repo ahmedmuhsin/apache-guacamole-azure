@@ -52,20 +52,6 @@ az vm availability-set create \
     --platform-fault-domain-count 2 \
     --platform-update-domain-count 3
 
-# Setting NSG rules
-az network nsg rule create \
-    --resource-group $rg \
-    --nsg-name $nsg \
-    --name web-rule \
-    --access Allow \
-    --protocol Tcp \
-    --direction Inbound \
-    --priority 200 \
-    --source-address-prefix Internet \
-    --source-port-range "*" \
-    --destination-address-prefix "*" \
-    --destination-port-range 80
-
 for i in `seq 1 2`; do
     # VMs Creation
     az vm create --resource-group $rg \
@@ -81,6 +67,20 @@ for i in `seq 1 2`; do
         --subnet $snet \
         --nsg $nsg 
     done
+
+# Setting NSG rules
+az network nsg rule create \
+    --resource-group $rg \
+    --nsg-name $nsg \
+    --name web-rule \
+    --access Allow \
+    --protocol Tcp \
+    --direction Inbound \
+    --priority 200 \
+    --source-address-prefix Internet \
+    --source-port-range "*" \
+    --destination-address-prefix "*" \
+    --destination-port-range 80
 
 for i in `seq 1 2`; do
     # Generating the Guacamole setup script locally on the VMs
